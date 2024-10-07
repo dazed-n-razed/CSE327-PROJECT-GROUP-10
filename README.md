@@ -1,4 +1,4 @@
-CSE327 Project Group 07: LaunchPad
+CSE327 Project Group 10: LaunchPad
 this project is built using Vite with the React library and JavaScript. Follow these steps to get started:
 
 Step 1: Clone the Repository
