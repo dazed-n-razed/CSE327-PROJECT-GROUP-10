@@ -12,7 +12,7 @@ function App() {
         <div className="bg-gradient-to-r from-indigo-500 w-full h-full flex flex-row md:flex-row items-center justify-center ">
           <div className="bg-white h-full w-full md:w-1/2 flex flex-col items-center justify-center p-3 ">
             <p className="pb-4 text-black text-sm md:text-5xl text-center md:text-left md:m-5 md:w-1/2">
-              All Set For Your Project To Reach Sky High
+              All Set For Your asdasdasdadasdasdadsProject To Reach Sky High
             </p>
             <button
               className="w-full md:w-1/2 bg-white text-sm md:text-lg text-blue-400 mb-2 md:mb-3 p-2 md:p-3 border-2 rounded-full font-semibold"
