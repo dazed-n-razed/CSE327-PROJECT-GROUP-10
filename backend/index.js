@@ -24,6 +24,6 @@ app.listen(PORT, () => {
       return;
     }
     database = client.db(DATABASENAME);
-    console.log("MongoDB connection successful!");
+    console.log("MongoDB connection successfuldfsdf!");
   });
 });
