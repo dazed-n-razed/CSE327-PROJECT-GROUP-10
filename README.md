@@ -27,3 +27,13 @@ Start the app: Finally, run the app in development mode with:
 npm run dev
 
 Now you can access your Vite app in your web browser!
+
+
+backend server start 
+
+npm init -y
+npm install express --save
+npm install cors
+npm install mongodb@latest --save
+npm multer --save
+npm install mongoose 
