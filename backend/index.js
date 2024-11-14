@@ -1,29 +1,37 @@
-const express = require("express");
-const { MongoClient } = require("mongodb");
-const cors = require("cors");
+// backend/index.js
+
+// Load environment variables
+import dotenv from "dotenv";
+dotenv.config();
+
+// Import necessary modules
+import express, { json } from "express";
+import { connect } from "mongoose";
+import cors from "cors";
+
+// Import Routes
+import userRoutes from "./routes/userRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
 
 const app = express();
+
+// Middleware
 app.use(cors());
+app.use(json()); // Parse incoming JSON data
 
-// MongoDB connection details
-const CONNECTION_STRING =
-  "mongodb+srv://shahriarratul100:49777balermongodb@cluster0.rhz50.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const DATABASENAME = "LaunchPad";
-let database;
+// Connect to MongoDB
+connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => console.error("MongoDB connection error:", error));
 
-// Set up port with fallback to 3000 if not specified
+// Routes
+app.use("/api/users", userRoutes); // User-related routes
+app.use("/api/projects", projectRoutes); // Project-related routes
+
+// Define the port
 const PORT = process.env.PORT || 3000;
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-
-  // Attempt MongoDB connection without deprecated options
-  MongoClient.connect(CONNECTION_STRING, (error, client) => {
-    if (error) {
-      console.error("Failed to connect to MongoDB", error);
-      return;
-    }
-    database = client.db(DATABASENAME);
-    console.log("MongoDB connection successfuldfsdf!");
-  });
 });
