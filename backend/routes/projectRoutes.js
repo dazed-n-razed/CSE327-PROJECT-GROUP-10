@@ -1,17 +1,19 @@
-// backend/routes/projectRoutes.js
-
 import express from "express";
+import authMiddleware, {
+  adminMiddleware,
+} from "../middleware/authMiddleware.js";
 import {
   createProject,
-  getAllProjects,
-  getProjectById,
+  getProjects,
+  deleteProject,
+  approveProject,
 } from "../controllers/projectController.js";
 
 const router = express.Router();
 
-// Routes for projects
-router.post("/", createProject); // Create a new project
-router.get("/", getAllProjects); // Get all projects
-router.get("/:id", getProjectById); // Get a specific project by ID
+router.post("/", authMiddleware, createProject); // Users can create projects
+router.get("/", getProjects); // Public access
+router.delete("/:id", authMiddleware, adminMiddleware, deleteProject); // Admin-only
+router.put("/:id/approve", authMiddleware, adminMiddleware, approveProject); // Admin-only
 
-export default router; // Make sure this is a default export
+export default router;

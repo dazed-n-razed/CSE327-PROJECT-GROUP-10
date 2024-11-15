@@ -1,0 +1,29 @@
+backend/
+├── config/
+│   └── db.js                # MongoDB connection configuration
+├── controllers/
+│   └── userController.js    # Logic for user-related operations
+│   └── projectController.js # Logic for project-related operations
+│   └── pledgeController.js  # Logic for pledge-related operations
+│   └── transactionController.js # Logic for transaction-related operations
+│   └── commentController.js # Logic for comment-related operations
+├── middleware/
+│   └── authMiddleware.js    # Middleware for JWT authentication
+│   └── errorMiddleware.js   # Error handling middleware
+├── models/
+│   └── userModel.js         # Mongoose model for User
+│   └── projectModel.js      # Mongoose model for Project
+│   └── pledgeModel.js       # Mongoose model for Pledge
+│   └── transactionModel.js  # Mongoose model for Transaction
+│   └── commentModel.js      # Mongoose model for Comment
+├── routes/
+│   └── userRoutes.js        # Routes for user-related actions
+│   └── projectRoutes.js     # Routes for project-related actions
+│   └── pledgeRoutes.js      # Routes for pledge-related actions
+│   └── transactionRoutes.js # Routes for transaction-related actions
+│   └── commentRoutes.js     # Routes for comment-related actions
+├── utils/
+│   └── helper.js            # Helper functions (e.g., for validation, hashing)
+├── index.js                 # Main entry file for the server
+├── package.json             # Project dependencies and scripts
+└── .env                     # Environment variables (e.g., DB connection, JWT secret)
