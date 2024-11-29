@@ -1,47 +1,33 @@
-const multer = require('multer');
-const path = require('path');
 
-// Set up storage engine for Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Folder where files will be stored
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // File name with timestamp
-  },
-});
+import upload from "../utils/multer.js"; 
+// Create a new project with file upload
+export const createProject = async (req, res) => {
+  const { title, description, goalAmount, creator } = req.body;
 
-// File filter to accept only images
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true); // Accept file
-  } else {
-    cb(new Error('Invalid file type. Only images are allowed.'), false);
+  if (!req.file) {
+    return res.status(400).json({ error: "Image file is required" });  // Handle missing file
   }
-};
 
-// Initialize multer with storage and file filter options
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Max file size 5MB
-});
+  const image = req.file.path;  // Get the file path of the uploaded image
 
-// File upload handler
-exports.uploadFile = (req, res) => {
+  // Validate project data using a helper function
+  if (!validateProjectData({ title, description, goalAmount, creator, image })) {
+    return res.status(400).json({ error: "Invalid project data" });
+  }
+
   try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: 'No file uploaded' });
-    }
-    res.status(200).json({
-      success: true,
-      message: 'File uploaded successfully',
-      filePath: `/uploads/${req.file.filename}`, // Return file path
+    const newProject = new Project({
+      title,
+      description,
+      goalAmount,
+      creator,
+      image,  // Store the image path in the project
     });
+
+    await newProject.save();
+    res.status(201).json({ message: "Project created successfully", project: newProject });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    res.status(500).json({ error: "Error creating project", details: error.message });
   }
 };
 
-// Middleware to handle file uploads
-exports.upload = upload.single('file'); // 'file' is the key for the uploaded file in the request
