@@ -1,31 +1,24 @@
-const { Product } = require('../models'); // Adjust this according to your database model (e.g., Sequelize)
+// backend/controllers/searchController.js
 
-// Search products by query parameters
-exports.searchProducts = async (req, res) => {
+
+export const searchProjects = async (req, res) => {
+  const { query } = req.query;  // Getting the search query from the query parameters
+
   try {
-    const { keyword, category, priceRange, page = 1, limit = 10 } = req.query;
+    // Perform the search on title or description
+    const projects = await Project.find({
+      $or: [
+        { title: { $regex: query, $options: 'i' } },  // Case-insensitive search for title
+        { description: { $regex: query, $options: 'i' } }  // Case-insensitive search for description
+      ]
+    });
 
-    const filters = {};
-
-    if (keyword) filters.name = { $like: `%${keyword}%` }; // Keyword search
-    if (category) filters.category = category; // Filter by category
-    if (priceRange) {
-      const [minPrice, maxPrice] = priceRange.split(',').map(Number);
-      filters.price = { $between: [minPrice, maxPrice] }; // Filter by price range
+    if (projects.length === 0) {
+      return res.status(404).json({ error: "No projects found matching your search" });
     }
 
-    // Fetch products with filters and pagination
-    const products = await Product.findAll({
-      where: filters,
-      offset: (page - 1) * limit, // Pagination offset
-      limit: limit,               // Pagination limit
-    });
-
-    res.status(200).json({
-      success: true,
-      data: products,
-    });
+    res.status(200).json(projects);
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    res.status(500).json({ error: "Error searching projects", details: error.message });
   }
 };

@@ -1,0 +1,20 @@
+backend/
+├── config/
+│   └── db.js                  # MongoDB or file system connection configuration (if applicable)
+├── controllers/
+│   └── uploadController.js       # Logic for file upload and management (e.g., upload, delete, get file info)
+│   └── searchController.js     # Logic for searching files in the 'uploads' directory
+├── middleware/
+│   └── errorMiddleware.js      # Error handling middleware
+│   └── fileUploadMiddleware.js # Middleware for handling file upload (if needed)
+├── models/
+│   └── fileModel.js            # (Optional) Model for storing file metadata in the database, if needed
+├── routes/
+│   └── uploadRoutes.js           # Routes for file upload and search operations
+│   └── searchRoutes.js         # Search routes for file searching operations
+├── utils/
+│   └── fileUpload.js           # Utility functions for file validation, storage, etc.
+│   └── multer.js               # Multer configuration for file upload (if applicable)
+├── index.js                    # Main entry file for the server
+├── package.json                # Project dependencies and scripts
+└── .env                        # Environment variables (e.g., for file storage path, JWT secret if needed)
