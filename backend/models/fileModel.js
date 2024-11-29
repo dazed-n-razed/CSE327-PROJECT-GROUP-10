@@ -1,32 +1,43 @@
-// models/fileModel.js
+// backend/models/fileModel.js
 
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
-// Define the schema for file metadata
-const fileSchema = new mongoose.Schema({
-  filename: {
-    type: String,
-    required: true,  // Filename is required
+// Define Project Schema
+const projectSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    goalAmount: {
+      type: Number,
+      required: true,
+    },
+    raisedAmount: {
+      type: Number,
+      default: 0,
+    },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    image: {
+      type: String, // Store the image file path
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  path: {
-    type: String,
-    required: true,  // Path where the file is stored
-  },
-  size: {
-    type: Number,
-    required: true,  // File size in bytes
-  },
-  mimetype: {
-    type: String,
-    required: true,  // MIME type (e.g., image/jpeg, application/pdf)
-  },
-  uploadDate: {
-    type: Date,
-    default: Date.now,  // Date when the file was uploaded
-  },
-});
+  { timestamps: true }
+);
 
-// Create a model from the schema
-const File = mongoose.model('File', fileSchema);
-
-module.exports = File;
+// Create and export the model
+const Project = mongoose.model("Project", projectSchema);
+export default Project;
