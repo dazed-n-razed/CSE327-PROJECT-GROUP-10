@@ -1,27 +1,31 @@
-// middleware/fileUploadMiddleware.js
+// middlewares/fileUploadMiddleware.js
 
-const fileUploadMiddleware = (req, res, next) => {
-  const file = req.file;
+import multer from "multer";
+import path from "path";
 
-  // Check if a file is uploaded
-  if (!file) {
-    return res.status(400).json({ message: 'No file uploaded' });
+// Define storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Folder where files will be saved
+  },
+  filename: (req, file, cb) => {
+    // Use current timestamp + file extension as the filename
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+// Filter to allow only specific file types (e.g., images)
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only image files are allowed"), false);
   }
-
-  // Check the file type (example: only allow images)
-  const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-  if (!allowedTypes.includes(file.mimetype)) {
-    return res.status(400).json({ message: 'Invalid file type. Only JPG, PNG, and PDF are allowed.' });
-  }
-
-  // Check file size (example: max 5MB)
-  const maxSize = 5 * 1024 * 1024;  // 5MB
-  if (file.size > maxSize) {
-    return res.status(400).json({ message: 'File size exceeds the 5MB limit' });
-  }
-
-  // If everything is okay, move to the next middleware
-  next();
 };
 
-module.exports = fileUploadMiddleware;
+// Initialize multer with the storage and fileFilter configurations
+const upload = multer({ storage, fileFilter });
+
+// Middleware to handle file upload
+export const uploadSingleImage = upload.single("image"); // "image" is the name field in the form
