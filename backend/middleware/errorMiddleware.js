@@ -1,29 +1,26 @@
-// middleware/errorMiddleware.js
+// middlewares/errorMiddleware.js
+// this is for search middle ware
+import { searchAll } from "../utils/searchHelper.js";
 
-const errorMiddleware = (err, req, res, next) => {
-  console.error(err);  // Log the error details for debugging
+// Middleware to handle search request and return results
+export const searchMiddleware = async (req, res, next) => {
+  const searchTerm = req.query.q; // Assumes the query parameter is 'q'
 
-  // Check for known errors and handle them
-  if (err.name === 'ValidationError') {
-    return res.status(400).json({
-      message: 'Validation error',
-      details: err.errors,  // Return validation errors (if any)
-    });
+  if (!searchTerm || searchTerm.trim().length === 0) {
+    return res.status(400).json({ message: "Search term cannot be empty" });
   }
 
-  // Check if the error is related to multer (e.g., file size limit exceeded)
-  if (err instanceof multer.MulterError) {
-    return res.status(400).json({
-      message: 'File upload error',
-      error: err.message,
-    });
-  }
+  try {
+    // Use the search helper to fetch search results from various models
+    const results = await searchAll(searchTerm);
 
-  // General error handler
-  return res.status(500).json({
-    message: 'Internal Server Error',
-    error: err.message || 'An unknown error occurred',
-  });
+    // Attach the search results to the request object, so that it can be used downstream
+    req.searchResults = results;
+
+    // Call the next middleware or route handler
+    next();
+  } catch (error) {
+    // If there's an error, pass it to the error handler
+    next(error);
+  }
 };
-
-module.exports = errorMiddleware;
