@@ -2,42 +2,18 @@
 
 import mongoose from "mongoose";
 
-// Define Project Schema
-const projectSchema = new mongoose.Schema(
+// Define the File Schema
+const fileSchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    goalAmount: {
-      type: Number,
-      required: true,
-    },
-    raisedAmount: {
-      type: Number,
-      default: 0,
-    },
-    creator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    image: {
-      type: String, // Store the image file path
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  { timestamps: true }
+    fileName: { type: String, required: true }, // Name of the file
+    filePath: { type: String, required: true }, // Path where the file is stored
+    fileType: { type: String, required: true }, // MIME type (e.g., image/png, application/pdf)
+    fileSize: { type: Number, required: true }, // File size in bytes
+    uploadedAt: { type: Date, default: Date.now }, // Timestamp of when the file was uploaded
+  }
 );
 
-// Create and export the model
-const Project = mongoose.model("Project", projectSchema);
-export default Project;
+// Create and export the File model
+const File = mongoose.model("File", fileSchema);
+export default File;
+
