@@ -1,21 +1,20 @@
 // backend/controllers/searchController.js
 
+import Project from "../models/projectModel.js";
 
-export const searchProjects = async (req, res) => {
-  const { query } = req.query;  // Getting the search query from the query parameters
+// Search projects by title
+export const searchProjectsByTitle = async (req, res) => {
+  const { title } = req.query; // Extract the title from query parameters
+
+  if (!title || title.trim() === "") {
+    return res.status(400).json({ error: "Title query parameter is required" });
+  }
 
   try {
-    // Perform the search on title or description
+    // Search for projects with titles matching the provided title (case-insensitive)
     const projects = await Project.find({
-      $or: [
-        { title: { $regex: query, $options: 'i' } },  // Case-insensitive search for title
-        { description: { $regex: query, $options: 'i' } }  // Case-insensitive search for description
-      ]
+      title: { $regex: title, $options: "i" },
     });
-
-    if (projects.length === 0) {
-      return res.status(404).json({ error: "No projects found matching your search" });
-    }
 
     res.status(200).json(projects);
   } catch (error) {
