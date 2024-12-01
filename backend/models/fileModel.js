@@ -2,7 +2,9 @@
 
 import mongoose from "mongoose";
 
-// Define the File Schema
+/**
+ * File Schema definition.
+ */
 const fileSchema = new mongoose.Schema(
   {
     fileName: { type: String, required: true }, // Name of the file
@@ -10,7 +12,8 @@ const fileSchema = new mongoose.Schema(
     fileType: { type: String, required: true }, // MIME type (e.g., image/png, application/pdf)
     fileSize: { type: Number, required: true }, // File size in bytes
     uploadedAt: { type: Date, default: Date.now }, // Timestamp of when the file was uploaded
-  }
+  },
+  { timestamps: true } // Automatically add createdAt and updatedAt fields
 );
 
 // Create and export the File model
