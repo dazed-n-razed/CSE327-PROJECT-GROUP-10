@@ -2,7 +2,12 @@
 
 import Project from "../models/projectModel.js";
 
-// Search projects by title
+/**
+ * Searches for projects by title.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - Sends a response back to the client.
+ */
 export const searchProjectsByTitle = async (req, res) => {
   const { title } = req.query; // Extract the title from query parameters
 
