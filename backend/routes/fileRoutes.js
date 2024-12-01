@@ -6,11 +6,14 @@ import { uploadFile, getFile } from "../controllers/fileController.js";
 
 const router = express.Router();
 
-// Route to upload a file
+/**
+ * Route to upload a file.
+ */
 router.post("/upload", upload.single("file"), uploadFile);
 
-// Route to retrieve a file
+/**
+ * Route to retrieve a file.
+ */
 router.get("/:fileName", getFile);
 
 export default router;
-
