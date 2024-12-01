@@ -3,7 +3,12 @@
 import path from "path";
 import fs from "fs";
 
-// Handle file upload
+/**
+ * Handles file upload.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @returns {void}
+ */
 export const uploadFile = (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
@@ -16,7 +21,12 @@ export const uploadFile = (req, res) => {
   });
 };
 
-// Handle file retrieval
+/**
+ * Retrieves a file.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @returns {void}
+ */
 export const getFile = (req, res) => {
   const { fileName } = req.params;
   const filePath = path.resolve("uploads", fileName);
@@ -29,3 +39,4 @@ export const getFile = (req, res) => {
     res.sendFile(filePath);
   });
 };
+
