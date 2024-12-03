@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "jsdocs": "^1.0.0"
+  },
+  "scripts": {
+    "docs": "jsdoc -c jsdoc.json"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true
+  }
+}

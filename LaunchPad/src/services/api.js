@@ -69,20 +69,38 @@ export const getProfile = async () => {
   }
 };
 
-export const createProject = async (projectData, token) => {
+/**
+ * Creates a new project.
+ *
+ * Sends a POST request to the backend API to create a new project.
+ * Requires a valid authentication token stored in `localStorage`.
+ *
+ * @async
+ * @function createProject
+ * @param {Object} data - The data for the new project.
+ * @param {string} data.name - The name of the project.
+ * @param {string} data.description - The description of the project.
+ * @param {number} data.goalAmount - The goal amount for the project.
+ * @param {string} data.deadline - The deadline for the project in ISO 8601 format.
+ * @returns {Promise<Object>} The created project data returned by the API.
+ * @throws {Object} If the request fails, throws an error object with details.
+ */
+export const createProject = async (data) => {
   try {
-    const response = await axios.post(`${BASE_URL}/projects`, projectData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data; // Returns success message and project data
-  } catch (error) {
-    console.error(
-      "Error during project creation:",
-      error.response?.data || error.message
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token available");
+
+    const response = await axios.post(
+      "http://localhost:3000/api/projects",
+      data,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
-    throw new Error(error.response?.data?.error || "Failed to create project");
+
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+    throw error.response?.data || { error: "Unknown API error occurred" };
   }
 };

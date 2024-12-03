@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <header className="bg-blue-500 text-white p-4">
       <nav className="flex justify-between items-center">
-        <h1 className="text-xl font-bold">Kickstarter Clone</h1>
+        <h1 className="text-xl font-bold">LAUNCH PAD</h1>
         <ul className="flex space-x-4">
           <li>
             <Link to="/" className="hover:underline">

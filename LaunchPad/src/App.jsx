@@ -9,7 +9,6 @@ import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 import { useEffect, useState } from "react";
-import ProjectForm from "./pages/ProjectPage";
 import ProjectPage from "./pages/ProjectPage";
 
 const App = () => {

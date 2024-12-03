@@ -1,10 +1,12 @@
+// routes/projectRoutes.js
+
 import express from "express";
+import { protect } from "../middleware/authMiddleware.js"; // Import protect as named import
 import { createProject } from "../controllers/projectController.js";
-import { protect } from "../middleware/authMiddleware.js"; // Middleware to check user authentication
 
 const router = express.Router();
 
-// Route to create a new project
+// Protect the project creation route
 router.post("/", protect, createProject);
 
 export default router;

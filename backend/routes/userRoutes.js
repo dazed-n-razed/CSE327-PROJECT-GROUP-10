@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middleware/authMiddleware.js";
+import { protect } from "../middleware/authMiddleware.js"; // Correctly import the protect middleware
 import {
   registerUser,
   loginUser,
@@ -15,6 +15,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // Protected route for fetching user profile
-router.get("/profile", authMiddleware, getProfile);
+router.get("/profile", protect, getProfile); // Use the 'protect' middleware here
 
 export default router;

@@ -1,8 +1,9 @@
 // middleware/authMiddleware.js
+
 import { extractToken, verifyToken } from "../utils/helper.js"; // Import helper functions
 
 // Authentication middleware to check if the user is authenticated
-export default function authMiddleware(req, res, next) {
+export const protect = (req, res, next) => {
   try {
     // Extract token using the helper function
     const token = extractToken(req);
@@ -29,7 +30,7 @@ export default function authMiddleware(req, res, next) {
     // If an error occurs, return an error response
     res.status(401).json({ error: "Invalid token" });
   }
-}
+};
 
 // Admin middleware to ensure that the user has an admin role
 export const adminMiddleware = (req, res, next) => {
@@ -41,3 +42,5 @@ export const adminMiddleware = (req, res, next) => {
   // If user is an admin, proceed to the next middleware/route handler
   next();
 };
+// Export protect as default
+export default protect;
