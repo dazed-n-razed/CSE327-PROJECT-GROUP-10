@@ -1,22 +1,20 @@
 import express from "express";
-import authMiddleware, {
-  adminMiddleware,
-} from "../middleware/authMiddleware.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 import {
   registerUser,
   loginUser,
-  getUserProfile,
-  updateUserProfile,
-  deleteUser,
+  getProfile,
 } from "../controllers/userController.js";
 
 const router = express.Router();
 
-// User routes
-router.post("/register", registerUser); // Register a new user
-router.post("/login", loginUser); // Login user
-router.get("/profile", authMiddleware, getUserProfile); // Auth required
-router.put("/profile", authMiddleware, updateUserProfile); // Auth required
-router.delete("/profile", authMiddleware, deleteUser); // Auth required
+// Public route for user registration
+router.post("/register", registerUser);
+
+// Public route for user login
+router.post("/login", loginUser);
+
+// Protected route for fetching user profile
+router.get("/profile", authMiddleware, getProfile);
 
 export default router;

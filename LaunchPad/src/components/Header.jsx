@@ -22,6 +22,11 @@ const Header = () => {
               Register
             </Link>
           </li>
+          <li>
+            <Link to="/projects" className="hover:underline">
+              Project
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
