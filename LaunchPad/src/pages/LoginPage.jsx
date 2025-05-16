@@ -17,19 +17,26 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(""); // Clear previous errors
 
     const userData = { email, password };
 
     try {
+      console.log("Attempting login with userData:", userData);
       const response = await loginUser(userData); // Call the login API
+      console.log("Login response:", response);
+
       if (response && response.token) {
+        console.log("Login successful, token received:", response.token);
         localStorage.setItem("token", response.token); // Store the token in localStorage
         navigate("/profile"); // Navigate to the profile page after successful login
       } else {
+        console.error("Invalid credentials response:", response);
         setError("Invalid credentials. Please try again.");
       }
     } catch (err) {
-      setError("Login failed. Please try again later.");
+      console.error("Login failed with error:", err);
+      setError(err.message || "Login failed. Please try again later.");
     } finally {
       setLoading(false);
     }

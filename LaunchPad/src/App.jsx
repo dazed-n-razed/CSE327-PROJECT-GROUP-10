@@ -8,19 +8,10 @@ import {
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
-import { useEffect, useState } from "react";
 import ProjectPage from "./pages/ProjectPage";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Check if the user is authenticated by checking if the token exists
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
+  const isAuthenticated = !!localStorage.getItem("token"); // Dynamically check token presence
 
   return (
     <Router>
@@ -41,7 +32,6 @@ const App = () => {
           path="/projects"
           element={isAuthenticated ? <ProjectPage /> : <Navigate to="/login" />}
         />
-        {/* Project creation page */}
       </Routes>
     </Router>
   );
