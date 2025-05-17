@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 import ProjectPage from "./pages/ProjectPage";
+import NewRegistrationPage from "./pages/NewRegistrationPage";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("token"); // Dynamically check token presence
@@ -16,7 +17,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/register" element={<NewRegistrationPage />} />
         <Route path="/login" element={<LoginPage />} />
         {/* If the user is authenticated, they can access the ProfilePage */}
         <Route

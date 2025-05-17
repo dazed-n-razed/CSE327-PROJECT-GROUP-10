@@ -16,11 +16,12 @@ import Footer from "../components/Footer"; // Assuming you have a Footer compone
  * )
  */
 const ProfilePage = () => {
-  /**
-   * @type {Object|null} user - The user data fetched from the API.
-   * Initially null until the user data is fetched.
-   */
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    name: "",
+    username: "",
+    email: "",
+    role: "",
+  });
 
   /**
    * @type {boolean} loading - The loading state for the profile data fetching.
@@ -52,14 +53,30 @@ const ProfilePage = () => {
    * @async
    * @function
    * @returns {Promise<void>} - Fetches user data and updates the state accordingly.
-   */
-  useEffect(() => {
+   */ useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const userData = await getProfile(); // Call API to fetch profile data
+        // Try to get user data from localStorage first
+        const cachedUser = localStorage.getItem("user");
+        if (cachedUser) {
+          setUser(JSON.parse(cachedUser));
+          setLoading(false);
+        }
+
+        // Fetch fresh data from API
+        const userData = await getProfile();
+        // Update both state and localStorage with fresh data
         setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
       } catch (err) {
-        setError("Failed to fetch user profile.");
+        console.error("Error fetching profile:", err);
+        const cachedUser = localStorage.getItem("user");
+        if (cachedUser) {
+          // If API fails but we have cached data, use that
+          setUser(JSON.parse(cachedUser));
+        } else {
+          setError("Failed to fetch user profile.");
+        }
       } finally {
         setLoading(false);
       }
@@ -97,7 +114,7 @@ const ProfilePage = () => {
   if (error) return <p className="text-center text-lg text-red-500">{error}</p>;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Header */}
       <Header />
 
@@ -134,8 +151,15 @@ const ProfilePage = () => {
               </button>
             </div>
             <div className="md:ml-6 mt-4 md:mt-0 text-center md:text-left">
-              <h1 className="text-2xl font-bold text-white">Sarah Johnson</h1>
-              <p className="text-teal-100">@sarahjcreates</p>
+              <h1 className="text-2xl font-bold text-white">
+                {user.name || "Loading..."}
+              </h1>
+              <p>
+                <span className="text-white">
+                  {" "}
+                  {user.email || "loading..."}
+                </span>{" "}
+              </p>
               <div className="flex flex-wrap justify-center md:justify-start mt-2 space-x-2">
                 <span className="badge bg-teal-800 text-teal-100 text-xs px-2 py-1 rounded-full">
                   Superbacker
@@ -151,9 +175,9 @@ const ProfilePage = () => {
             <div className="md:ml-auto mt-4 md:mt-0 flex items-center space-x-2">
               <button
                 id="logout-btn"
-                className="bg-white text-teal-600 hover:bg-teal-50 px-4 py-2 rounded-md font-medium shadow-sm"
+                className="bg- text-white hover:bg-red-600 px-1 py-1 rounded-md font-medium shadow-sm"
               >
-                Logout
+                Log Out
               </button>
             </div>
           </div>
@@ -882,14 +906,14 @@ const ProfilePage = () => {
               <p>
                 <span className="font-semibold text-gray-200">Name:</span>{" "}
                 {user?.name}
-              </p>
+              </p>{" "}
               <p>
                 <span className="font-semibold text-gray-200">Email:</span>{" "}
-                {user?.email}
+                {user.email || "loading..."}
               </p>
               <p>
                 <span className="font-semibold text-gray-200">Role:</span>{" "}
-                {user?.role}
+                {user.role || "loading..."}
               </p>
             </div>
           </div>

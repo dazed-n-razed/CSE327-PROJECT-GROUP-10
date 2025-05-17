@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/api"; // Assuming loginUser API is in your services
 
 const LoginPage = () => {
@@ -25,11 +25,20 @@ const LoginPage = () => {
       console.log("Attempting login with userData:", userData);
       const response = await loginUser(userData); // Call the login API
       console.log("Login response:", response);
-
       if (response && response.token) {
         console.log("Login successful, token received:", response.token);
-        localStorage.setItem("token", response.token); // Store the token in localStorage
-        navigate("/profile"); // Navigate to the profile page after successful login
+        // Store token
+        localStorage.setItem("token", response.token);
+
+        // Store user data
+        const user = response.user || {
+          email: email,
+          name: response.name || email.split("@")[0],
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Navigate to profile page
+        navigate("/profile");
       } else {
         console.error("Invalid credentials response:", response);
         setError("Invalid credentials. Please try again.");
@@ -41,20 +50,51 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-
   return (
-    <div className="flex w-full min-h-screen items-center justify-center ">
+    <div className="flex w-full min-h-screen items-center justify-center bg-gray-100">
       <style jsx global>{`
         body {
-          background-image: url("https://firebasestorage.googleapis.com/v0/b/ratuls-projects.appspot.com/o/299%20final%20presentation.pptx.png?alt=media&token=eb16b380-f923-4ad1-a55f-ad2701c649ac");
+          background-image:
           background-size: cover;
           background-position: center;
         }
       `}</style>
 
-      <div className="flex justify-center w-full max-w-screen-lg h-full ">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link to="/" className="flex items-center">
+            <svg
+              className="h-8 w-8 text-emerald-500"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" />
+              <path
+                d="M2 17L12 22L22 17"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M2 12L12 17L22 12"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span className="ml-2 text-xl font-bold text-gray-900 tracking-tight">
+              LaunchPad
+            </span>
+          </Link>
+        </div>
+      </nav>
+
+      <div className="flex justify-center w-full max-w-screen-lg h-full pt-16">
         <div className="flex flex-col md:flex-row w-full h-auto justify-center items-center bg-white rounded-lg lg:rounded-l-box shadow-lg">
-          <div className="md:w-1/2 h-full bg-blue-400 md:rounded-l-lg md:rounded-none hidden lg:block ">
+          <div className="md:w-1/2 h-full bg-emerald-500 md:rounded-l-lg md:rounded-none hidden lg:block ">
             <div className="flex flex-col justify-between h-full p-10 text-white rounded-lg">
               <div>
                 <img
@@ -138,7 +178,7 @@ const LoginPage = () => {
                 {!loading ? (
                   <button
                     type="submit"
-                    className="py-3 rounded-xl bg-blue-500 text-white font-bold hover:bg-blue-600 transition-all"
+                    className="py-3 rounded-xl bg-emerald-500 text-white font-bold hover:bg-blue-600 transition-all"
                     onClick={handleLogin}
                   >
                     Sign in

@@ -1,9 +1,39 @@
 // Header.jsx
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Get user data from localStorage when component mounts
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+
+    // Add event listener for storage changes
+    const handleStorageChange = () => {
+      const updatedUserData = localStorage.getItem("user");
+      if (updatedUserData) {
+        setUser(JSON.parse(updatedUserData));
+      } else {
+        setUser(null);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
+  };
 
   return (
     <>
@@ -96,37 +126,51 @@ export default function Header() {
                   />
                 </svg>
               </button>
-              <div className="flex items-center border-l pl-4 border-gray-200">
-                <div className="h-8 w-8 rounded-full bg-emerald-100 overflow-hidden flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-emerald-600"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+              {user ? (
+                <div className="flex items-center border-l pl-4 border-gray-200">
+                  <div className="h-8 w-8 rounded-full bg-emerald-100 overflow-hidden flex items-center justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-emerald-600"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <Link
+                    to="/profile"
+                    className="ml-2 text-sm font-medium text-gray-700 hover:text-emerald-600"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                    {user.name}
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="ml-4 text-sm font-medium text-red-600 hover:text-red-700"
+                  >
+                    Logout
+                  </button>
                 </div>
-                <span className="ml-2 text-sm font-medium text-gray-700">
-                  Alex Morgan
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="ml-1 h-4 w-4 text-gray-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
+              ) : (
+                <div className="flex items-center space-x-4">
+                  <Link
+                    to="/login"
+                    className="text-gray-700 hover:text-emerald-600 text-sm font-medium"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -150,7 +194,7 @@ export default function Header() {
                     d="M4 6h16M4 12h16M4 18h16"
                   />
                 </svg>
-              </button>
+              </button>{" "}
             </div>
           </div>
         </div>
@@ -210,9 +254,39 @@ export default function Header() {
                       />
                     </svg>
                   </div>
-                  <span className="ml-3 text-base font-medium text-gray-700">
-                    Alex Morgan
-                  </span>
+                  {user ? (
+                    <div className="ml-3 flex items-center space-x-4">
+                      <Link
+                        to="/profile"
+                        className="text-base font-medium text-gray-700 hover:text-emerald-600"
+                      >
+                        {user.name}
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="text-sm font-medium text-red-600 hover:text-red-700"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="ml-3 flex items-center space-x-4">
+                      <Link
+                        to="/login"
+                        className="text-gray-700 hover:text-emerald-600 text-base font-medium"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/register"
+                        className="text-emerald-600 hover:text-emerald-700 text-base font-medium"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Sign Up
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

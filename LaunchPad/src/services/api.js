@@ -50,22 +50,22 @@ export const registerUser = async (userData) => {
 export const getProfile = async () => {
   const token = localStorage.getItem("token");
 
-  // Check if a token exists in local storage
   if (!token) {
     throw new Error("No token found");
   }
 
   try {
-    // Make a GET request to fetch the user profile from the backend
     const response = await axios.get(`${BASE_URL}/users/profile`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data; // Return the profile data from the response
+    return response.data; // The backend returns user data without password
   } catch (err) {
-    // Handle errors if the request fails
-    throw new Error("Failed to fetch user profile");
+    console.error("Error fetching profile:", err.response?.data || err.message);
+    throw new Error(
+      err.response?.data?.message || "Failed to fetch user profile"
+    );
   }
 };
 
