@@ -102,7 +102,7 @@ const ProfilePage = () => {
       <Header />
 
       {/* Profile Header */}
-      <div className="bg-teal-600 py-8 pt-20">
+      <div className="bg-teal-600 py-8 pt-20 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center md:items-start">
             <div className="relative">
