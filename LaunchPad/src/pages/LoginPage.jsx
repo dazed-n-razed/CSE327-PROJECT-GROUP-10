@@ -23,24 +23,37 @@ const LoginPage = () => {
 
     try {
       console.log("Attempting login with userData:", userData);
-      const response = await loginUser(userData); // Call the login API
+      const response = await loginUser(userData);
       console.log("Login response:", response);
-      if (response && response.token) {
+
+      if (!response) {
+        throw new Error("No response from server");
+      }
+
+      if (response.token) {
         console.log("Login successful, token received:", response.token);
+
         // Store token
         localStorage.setItem("token", response.token);
 
-        // Store user data
-        const user = response.user || {
+        // Store user data with fallback values
+        const user = {
           email: email,
-          name: response.name || email.split("@")[0],
+          name: response.user?.name || email.split("@")[0],
+          ...(response.user || {}),
         };
-        localStorage.setItem("user", JSON.stringify(user));
 
-        // Navigate to profile page
-        navigate("/profile");
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log("Stored user data:", user);
+
+        // Force authentication state update
+        window.dispatchEvent(new Event("storage"));
+
+        // Navigate to profile
+        console.log("Navigating to profile...");
+        navigate("/profile", { replace: true });
       } else {
-        console.error("Invalid credentials response:", response);
+        console.error("Invalid response format:", response);
         setError("Invalid credentials. Please try again.");
       }
     } catch (err) {
